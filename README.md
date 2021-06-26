@@ -1,6 +1,6 @@
 # FuckIO
 An opensource fucking machine, that is far superiour to anything on the market.
-![Rendering](/images/CAD-Screen.png)
+![Rendering](/CAD-Screen.png)
 
 ## Specs
 * Easy to built just with a 3D-printer, screwdrivers and easy-to-source parts.
