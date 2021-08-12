@@ -1,0 +1,705 @@
+[
+    {
+        "id": "4e95977f.9bae08",
+        "type": "tab",
+        "label": "FuckIO",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "461bd210.3a5e6c",
+        "type": "mqtt in",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "topic": "FuckIO/rssi",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "facb7f2d.63ae2",
+        "x": 230,
+        "y": 180,
+        "wires": [
+            [
+                "c5f02144.ec7ac"
+            ]
+        ]
+    },
+    {
+        "id": "c5f02144.ec7ac",
+        "type": "ui_artlessgauge",
+        "z": "4e95977f.9bae08",
+        "group": "bafa55f3.f11178",
+        "order": 6,
+        "width": "5",
+        "height": "1",
+        "name": "RSSI",
+        "icon": "",
+        "label": "RSSI",
+        "unit": "dBm",
+        "layout": "linear",
+        "decimals": 0,
+        "differential": false,
+        "minmax": false,
+        "colorTrack": "#555555",
+        "style": "",
+        "colorFromTheme": true,
+        "property": "payload",
+        "secondary": "secondary",
+        "inline": false,
+        "animate": true,
+        "sectors": [
+            {
+                "val": -90,
+                "col": "#ff0000",
+                "t": "min",
+                "dot": 0
+            },
+            {
+                "val": -50,
+                "col": "#fff714",
+                "t": "sec",
+                "dot": 0
+            },
+            {
+                "val": -20,
+                "col": "#04ff00",
+                "t": "sec",
+                "dot": 0
+            },
+            {
+                "val": 0,
+                "col": "#04ff00",
+                "t": "max",
+                "dot": 0
+            }
+        ],
+        "lineWidth": 3,
+        "bgcolorFromTheme": true,
+        "diffCenter": "",
+        "x": 950,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "6fa50f9.94791f",
+        "type": "mqtt out",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "topic": "FuckIO/command",
+        "qos": "2",
+        "retain": "false",
+        "broker": "facb7f2d.63ae2",
+        "x": 970,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "fc0a92a3.fb284",
+        "type": "ui_slider",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "label": "Depth [mm]",
+        "tooltip": "",
+        "group": "bafa55f3.f11178",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "0",
+        "max": "150",
+        "step": "2",
+        "x": 610,
+        "y": 400,
+        "wires": [
+            [
+                "17e821a5.36ba0e"
+            ]
+        ]
+    },
+    {
+        "id": "b3562036.3aa83",
+        "type": "ui_slider",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "label": "Stroke [mm]",
+        "tooltip": "",
+        "group": "bafa55f3.f11178",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "1",
+        "max": "150",
+        "step": "1",
+        "x": 610,
+        "y": 460,
+        "wires": [
+            [
+                "a4348b8a.e71d38"
+            ]
+        ]
+    },
+    {
+        "id": "76993274.14b58c",
+        "type": "ui_slider",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "label": "Speed [FPM]",
+        "tooltip": "",
+        "group": "bafa55f3.f11178",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "1",
+        "max": "250",
+        "step": "1",
+        "x": 610,
+        "y": 520,
+        "wires": [
+            [
+                "3581e10d.84a3de"
+            ]
+        ]
+    },
+    {
+        "id": "17e821a5.36ba0e",
+        "type": "mqtt out",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "topic": "FuckIO/depth",
+        "qos": "2",
+        "retain": "false",
+        "broker": "facb7f2d.63ae2",
+        "x": 960,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "a4348b8a.e71d38",
+        "type": "mqtt out",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "topic": "FuckIO/stroke",
+        "qos": "2",
+        "retain": "false",
+        "broker": "facb7f2d.63ae2",
+        "x": 960,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "3581e10d.84a3de",
+        "type": "mqtt out",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "topic": "FuckIO/speed",
+        "qos": "2",
+        "retain": "false",
+        "broker": "facb7f2d.63ae2",
+        "x": 960,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "930d3005.dd177",
+        "type": "inject",
+        "z": "4e95977f.9bae08",
+        "name": "Init 200mm",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "150",
+        "payloadType": "num",
+        "x": 260,
+        "y": 400,
+        "wires": [
+            [
+                "fc0a92a3.fb284"
+            ]
+        ]
+    },
+    {
+        "id": "a2ad3e08.a0cb8",
+        "type": "inject",
+        "z": "4e95977f.9bae08",
+        "name": "Init 60mm",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "60",
+        "payloadType": "num",
+        "x": 240,
+        "y": 460,
+        "wires": [
+            [
+                "b3562036.3aa83"
+            ]
+        ]
+    },
+    {
+        "id": "25d2268.f80bfda",
+        "type": "inject",
+        "z": "4e95977f.9bae08",
+        "name": "Init 20 FPM",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "20",
+        "payloadType": "num",
+        "x": 250,
+        "y": 520,
+        "wires": [
+            [
+                "76993274.14b58c"
+            ]
+        ]
+    },
+    {
+        "id": "30cc377d.2a2208",
+        "type": "ui_slider",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "label": "Sensation",
+        "tooltip": "",
+        "group": "bafa55f3.f11178",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "-100",
+        "max": "100",
+        "step": "5",
+        "x": 600,
+        "y": 580,
+        "wires": [
+            [
+                "b35f7df1.5e3b9"
+            ]
+        ]
+    },
+    {
+        "id": "b35f7df1.5e3b9",
+        "type": "mqtt out",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "topic": "FuckIO/sensation",
+        "qos": "2",
+        "retain": "false",
+        "broker": "facb7f2d.63ae2",
+        "x": 970,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "bd09047d.771518",
+        "type": "inject",
+        "z": "4e95977f.9bae08",
+        "name": "Init Neutral (0)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 260,
+        "y": 580,
+        "wires": [
+            [
+                "30cc377d.2a2208"
+            ]
+        ]
+    },
+    {
+        "id": "d685bbb.18d6948",
+        "type": "ui_dropdown",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "label": "Command",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "bafa55f3.f11178",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Start",
+                "value": "start",
+                "type": "str"
+            },
+            {
+                "label": "Stop",
+                "value": "stop",
+                "type": "str"
+            },
+            {
+                "label": "Full Back",
+                "value": "retract",
+                "type": "str"
+            },
+            {
+                "label": "Full Out",
+                "value": "extend",
+                "type": "str"
+            },
+            {
+                "label": "Home Drive",
+                "value": "home",
+                "type": "str"
+            },
+            {
+                "label": "Disable",
+                "value": "disable",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 610,
+        "y": 240,
+        "wires": [
+            [
+                "6fa50f9.94791f",
+                "102eda29.55edb6"
+            ]
+        ]
+    },
+    {
+        "id": "95195fc2.0360f",
+        "type": "ui_toast",
+        "z": "4e95977f.9bae08",
+        "position": "top right",
+        "displayTime": "10",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "topic": "",
+        "name": "",
+        "x": 970,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "64003455.02a1fc",
+        "type": "mqtt in",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "topic": "FuckIO/notify",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "facb7f2d.63ae2",
+        "x": 240,
+        "y": 660,
+        "wires": [
+            [
+                "95195fc2.0360f",
+                "20bbf9a4.251946"
+            ]
+        ]
+    },
+    {
+        "id": "20bbf9a4.251946",
+        "type": "debug",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "b5433a11.d976c8",
+        "type": "mqtt in",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "topic": "FuckIO/config",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "facb7f2d.63ae2",
+        "x": 230,
+        "y": 780,
+        "wires": [
+            [
+                "ec361a28.703118"
+            ]
+        ]
+    },
+    {
+        "id": "441ff17b.39c67",
+        "type": "debug",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "options",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "51c9ac87.3d82f4",
+        "type": "aedes broker",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "mqtt_port": 1883,
+        "mqtt_ws_bind": "port",
+        "mqtt_ws_port": "",
+        "mqtt_ws_path": "",
+        "cert": "",
+        "key": "",
+        "certname": "",
+        "keyname": "",
+        "dburl": "",
+        "usetls": false,
+        "x": 250,
+        "y": 80,
+        "wires": [
+            [
+                "f0d10fd0.d445"
+            ]
+        ]
+    },
+    {
+        "id": "f0d10fd0.d445",
+        "type": "debug",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "1d80cf68.199001",
+        "type": "ui_dropdown",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "label": "Pattern",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "bafa55f3.f11178",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": "",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 800,
+        "y": 780,
+        "wires": [
+            [
+                "403c99a4.d6c0b8"
+            ]
+        ]
+    },
+    {
+        "id": "403c99a4.d6c0b8",
+        "type": "mqtt out",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "topic": "FuckIO/pattern",
+        "qos": "2",
+        "retain": "false",
+        "broker": "facb7f2d.63ae2",
+        "x": 980,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "102eda29.55edb6",
+        "type": "debug",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "e0a53fe8.f7f14",
+        "type": "inject",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"Simple Stroke\":0},{\"Teasing or Pounding\":1}]",
+        "payloadType": "str",
+        "x": 230,
+        "y": 840,
+        "wires": [
+            [
+                "ec361a28.703118"
+            ]
+        ]
+    },
+    {
+        "id": "3d278513.7f747a",
+        "type": "json",
+        "z": "4e95977f.9bae08",
+        "name": "",
+        "property": "options",
+        "action": "",
+        "pretty": false,
+        "x": 650,
+        "y": 780,
+        "wires": [
+            [
+                "441ff17b.39c67",
+                "1d80cf68.199001"
+            ]
+        ]
+    },
+    {
+        "id": "ec361a28.703118",
+        "type": "change",
+        "z": "4e95977f.9bae08",
+        "name": "msg.payload to msg.options",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload",
+                "pt": "msg",
+                "to": "options",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 780,
+        "wires": [
+            [
+                "3d278513.7f747a"
+            ]
+        ]
+    },
+    {
+        "id": "facb7f2d.63ae2",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "bafa55f3.f11178",
+        "type": "ui_group",
+        "name": "FuckIO",
+        "tab": "e48c9d07.c37a4",
+        "order": 3,
+        "disp": true,
+        "width": "10",
+        "collapse": true
+    },
+    {
+        "id": "e48c9d07.c37a4",
+        "type": "ui_tab",
+        "name": "Device Test",
+        "icon": "mi-devices_other",
+        "order": 4,
+        "disabled": false,
+        "hidden": false
+    }
+]
