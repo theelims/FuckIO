@@ -2,7 +2,7 @@
 #include <StrokeEngine.h>
 #include <FastAccelStepper.h>
 #include <housekeeping.h>
-#include "pattern.h"
+#include <pattern.h>
 
 
 FastAccelStepperEngine engine = FastAccelStepperEngine();
@@ -169,7 +169,7 @@ bool StrokeEngine::startMotion() {
     // Stop current move, should one be pending (moveToMax or moveToMin)
     if (servo->isRunning()) {
         // Stop servo motor as fast as legaly allowed
-        servo->setAcceleration(MAX_STEP_ACC);
+        servo->setAcceleration(MAX_STEP_ACCEL);
         servo->applySpeedAcceleration();
         servo->stopMove();
     }
@@ -207,7 +207,7 @@ void StrokeEngine::stopMotion() {
     // only valid when 
     if (_state == SERVO_RUNNING) {
         // Stop servo motor as fast as legaly allowed
-        servo->setAcceleration(MAX_STEP_ACC);
+        servo->setAcceleration(MAX_STEP_ACCEL);
         servo->applySpeedAcceleration();
         servo->stopMove();
 
@@ -534,7 +534,7 @@ void StrokeEngine::_applyMotionProfile(motionParameter* motion) {
     servo->setSpeedInHz(constrain(motion->speed, 1, MAX_STEP_PER_SEC));
 
     // Constrain acceleration between 1 step/sec and MAX_STEP_ACC
-    servo->setAcceleration(constrain(motion->acceleration, 1, MAX_STEP_ACC));
+    servo->setAcceleration(constrain(motion->acceleration, 1, MAX_STEP_ACCEL));
 
     // Constrain position between 0 and MAX_STEP
     servo->moveTo(constrain(motion->position, 0, MAX_STEP));

@@ -1,10 +1,5 @@
 #pragma once
 
-// Debug Levels
-#define DEBUG_VERBOSE               // Show debug messages from the StrokeEngine on Serial
-//#define DEBUG_STROKE                // Show debug messaged for each individual stroke on Serial
-#define DEBUG_PATTERN               // Show debug messages from inside pattern generator on Serial
-
 // Pin Definitions
 #define SERVO_PULSE       4
 #define SERVO_DIR         16
@@ -26,31 +21,17 @@
                                     // Should be sufficiently to completley drive clear from 
                                     // homing switch
 #define MAX_RPM           2900      // What is the maximum RPM of the servo
-#define MAX_ACC           300000    // Maximum acceleration in mm/s^2
+#define MAX_ACCEL         300000    // Maximum acceleration in mm/s^2
 #define INVERT_DIRECTION  false     // Set to true to invert the direction signal
                                     // The firmware expects the home switch to be located at the 
                                     // end of an retraction move. That way the machine homes 
                                     // itself away from the body. Home position is -KEEPOUTBOUNDARY
 #define SERVO_ACTIVE_LOW  true      // Polarity of the enable signal. True for active low.
 
-// Motion Settings:
-#define HOMING_SPEED      5 * STEP_PER_MM       // Home with 5 mm/s
-#define HOMING_ACCEL      MAX_STEP_ACC / 10     // Acceleation is 10% of max allowed acceleration
-#define SAFE_SPEED        10 * STEP_PER_MM      // Safe Speed is 10 mm/s
-#define SAFE_ACCEL        MAX_STEP_ACC / 10     // Acceleation is 10% of max allowed acceleration
-
 // Default Settings:
 #define STROKE            60        // Stroke defaults to 60 mm
 #define DEPTH             TRAVEL    // Stroke is carried out at the front of the machine
 #define SPEED             60        // 60 Strokes per Minute
-
-// Derived Servo Settings:
-#define STEP_PER_MM       STEP_PER_REV / (PULLEY_TEETH * BELT_PITCH)
-#define TRAVEL            (MAX_TRAVEL - (2 * KEEPOUT_BOUNDARY))
-#define MIN_STEP          0
-#define MAX_STEP          int(0.5 + TRAVEL * STEP_PER_MM)
-#define MAX_STEP_PER_SEC  int(0.5 + (MAX_RPM * STEP_PER_REV) / 60)
-#define MAX_STEP_ACC      int(0.5 + MAX_ACC * STEP_PER_MM)
 
 // Housekeeping Settings:
 #define CONFIG_VERSION      "fio00.01"      // Version of the configuration
