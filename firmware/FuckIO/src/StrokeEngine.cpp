@@ -19,6 +19,10 @@ void StrokeEngine::begin() {
     _timeOfStroke = 60.0 / SPEED;
     _sensation = 0.0;
 
+#ifdef SERVO_ENDSTOP
+    pinMode(SERVO_ENDSTOP, INPUT);
+#endif
+
     // Setup FastAccelStepper 
     engine.init();
     servo = engine.stepperConnectToPin(SERVO_PULSE);
@@ -533,7 +537,7 @@ void StrokeEngine::_applyMotionProfile(motionParameter* motion) {
     // Constrain speed between 1 step/sec and MAX_STEP_PER_SEC
     servo->setSpeedInHz(constrain(motion->speed, 1, MAX_STEP_PER_SEC));
 
-    // Constrain acceleration between 1 step/sec and MAX_STEP_ACC
+    // Constrain acceleration between 1 step/sec^2 and MAX_STEP_ACC
     servo->setAcceleration(constrain(motion->acceleration, 1, MAX_STEP_ACCEL));
 
     // Constrain position between 0 and MAX_STEP

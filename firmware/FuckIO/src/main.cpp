@@ -1,5 +1,5 @@
 /**
- *   FuckIO Formware for ESP32
+ *   FuckIO Firmware for ESP32
  *   Use MQTT messages to control all built-in motion patterns
  *   https://github.com/theelims/FuckIO 
  *
@@ -143,7 +143,6 @@ void setup()
 
   // Set GPIOs
   pinMode(SERVO_ALARM, INPUT);
-  pinMode(SERVO_ENDSTOP, INPUT);
 
   // Set PWM output with 8bit resolution and 5kHz
   ledcSetup(0, 5000, 8);
