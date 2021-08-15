@@ -1,6 +1,6 @@
 # FuckIO
 An opensource fucking machine, that is far superiour to anything on the market.
-![Rendering](/images/CAD-Screen.png)
+![Rendering](/CAD-Screen.png)
 
 ## Specs
 * Easy to built just with a 3D-printer, screwdrivers and easy-to-source parts.
@@ -24,15 +24,7 @@ The motor mount is designed for a NEMA23 servo or stepper motor. Any motor fitti
 * GT2 20 Tooth Pulley for 8mm Axis and a 10mm belt
 * GT2 belt with 10mm width
 * Various M3 and M5 screws and nuts
-* Arduino Nano33 IoT
 
-## Electronics
-The electronics board is used to interface an external stepper or servo controller. I can't drive a motor directly. It is based around an Arduino Nano33 IoT to enable BLE or WiFi support. It sends 5V DIR, PUL, ENA signals and expects FAULT signal and a homing switch. Two MOSFETs with freewheeling diodes allow PWM control of external systems running of the 24V supply.
+## Control
+PCB, Firmware and Software are under heavy development. For now I recommend going with the OSSM board and firmware: https://github.com/KinkyMakers/OSSM-hardware
 
-## Firmware
-The firmware uses a self developed stepper library. It uses the SAMD21 timer perihperials to generate the PUL signal. That way it is possible to create a much higher step rate with no processor loading. Popular Arduino libraries like AccelStepper are not up to the task.
-
-__Do not use this firmware! It is heavly beeing worked on. It will destroy your hardware!__
-
-## Control Software
-No control software yet. But it is planned to use node-red in combination with MQTT messages.
