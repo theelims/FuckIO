@@ -12,8 +12,8 @@
 #include <Arduino.h>
 #include <config.h>
 #include <housekeeping.h>
-#include "FastAccelStepper.h"
-#include "StrokeEngine.h"
+#include <FastAccelStepper.h>
+#include <StrokeEngine.h>
 
 /*#################################################################################################
 ##
@@ -21,7 +21,32 @@
 ##
 ##################################################################################################*/
 
+// Step per mm calculation aid:
+#define STEP_PER_REV      3200      // How many steps per revolution of the motor (S1 on)
+#define PULLEY_TEETH      20        // How many teeth has the pulley
+#define BELT_PITCH        2         // What is the timing belt pitch in mm
+#define STEP_PER_MM       STEP_PER_REV / (PULLEY_TEETH * BELT_PITCH)
+
+static motorProperties servoMotor {
+  .stepsPerRevolution = STEP_PER_REV,     
+  .maxRPM = 2900,                
+  .maxAcceleration = 300000,      
+  .stepsPerMillimeter = STEP_PER_MM,   
+  .invertDirection = true,      
+  .enableActiveLow = true,      
+  .stepPin = SERVO_PULSE,              
+  .directionPin = SERVO_DIR,          
+  .enablePin = SERVO_ENABLE              
+};
+
+static machineGeometry strokingMachine = {
+  .physicalTravel = 160.0,       
+  .keepoutBoundary = 5.0      
+};
+
 StrokeEngine Stroker;
+
+String getPatternJSON();
 
 /*#################################################################################################
 ##
@@ -79,7 +104,7 @@ void receiveCommand(String payload) {
     Stroker.disable();
   }
   if (payload.equals("home")) {
-    Stroker.enableAndHome(homingNotification);
+    Stroker.enableAndHome(SERVO_ENDSTOP, true, homingNotification);
   }
 }
 
@@ -118,7 +143,7 @@ void receivePattern(String payload) {
 
 // ISR: Handel alarm input from servo
 void IRAM_ATTR alarmISR() {
-  Stroker.safeState();
+  Stroker.motorFault();
 }
 
 /*#################################################################################################
@@ -161,8 +186,11 @@ void setup()
   delay(1000);
 
   // Setup Stroke Engine
-  Stroker.begin();
-  Stroker.enableAndHome(homingNotification);
+  Stroker.begin(&strokingMachine, &servoMotor);
+  Stroker.enableAndHome(SERVO_ENDSTOP, true, homingNotification);
+
+  // Send available patterns as JSON
+  mqttPublish("/config", getPatternJSON());
 }
 
 void loop() 
@@ -177,3 +205,18 @@ void loop()
 ##
 ##################################################################################################*/
 
+String getPatternJSON() {
+    String JSON = "[{\"";
+    for (size_t i = 0; i < Stroker.getNumberOfPattern(); i++) {
+        JSON += String(Stroker.getPatternName(i));
+        JSON += "\": ";
+        JSON += String(i, DEC);
+        if (i < Stroker.getNumberOfPattern() - 1) {
+            JSON += "},{\"";
+        } else {
+            JSON += "}]";
+        }
+    }
+    Serial.println(JSON);
+    return JSON;
+}
