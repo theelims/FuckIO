@@ -12,7 +12,6 @@
 #include <Arduino.h>
 #include <config.h>
 #include <housekeeping.h>
-#include <FastAccelStepper.h>
 #include <StrokeEngine.h>
 
 /*#################################################################################################
