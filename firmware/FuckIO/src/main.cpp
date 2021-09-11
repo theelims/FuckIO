@@ -29,7 +29,7 @@
 static motorProperties servoMotor {
   .stepsPerRevolution = STEP_PER_REV,     
   .maxRPM = 2900,                
-  .maxAcceleration = 300000,      
+  .maxAcceleration = 100000,      
   .stepsPerMillimeter = STEP_PER_MM,   
   .invertDirection = true,      
   .enableActiveLow = true,      
@@ -98,6 +98,9 @@ void receiveCommand(String payload) {
   }
   if (payload.equals("extend")) {
     Stroker.moveToMax();
+  }
+  if (payload.equals("setup")) {
+    Stroker.setupDepth();
   }
   if (payload.equals("disable")) {
     Stroker.disable();

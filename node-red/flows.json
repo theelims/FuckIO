@@ -75,7 +75,7 @@
         "lineWidth": 3,
         "bgcolorFromTheme": true,
         "diffCenter": "",
-        "x": 950,
+        "x": 710,
         "y": 180,
         "wires": []
     },
@@ -88,7 +88,7 @@
         "qos": "2",
         "retain": "false",
         "broker": "facb7f2d.63ae2",
-        "x": 970,
+        "x": 730,
         "y": 240,
         "wires": []
     },
@@ -110,7 +110,7 @@
         "min": "0",
         "max": "150",
         "step": "2",
-        "x": 610,
+        "x": 490,
         "y": 400,
         "wires": [
             [
@@ -136,7 +136,7 @@
         "min": "1",
         "max": "150",
         "step": "1",
-        "x": 610,
+        "x": 490,
         "y": 460,
         "wires": [
             [
@@ -162,7 +162,7 @@
         "min": "1",
         "max": "250",
         "step": "1",
-        "x": 610,
+        "x": 490,
         "y": 520,
         "wires": [
             [
@@ -179,7 +179,7 @@
         "qos": "2",
         "retain": "false",
         "broker": "facb7f2d.63ae2",
-        "x": 960,
+        "x": 720,
         "y": 400,
         "wires": []
     },
@@ -192,7 +192,7 @@
         "qos": "2",
         "retain": "false",
         "broker": "facb7f2d.63ae2",
-        "x": 960,
+        "x": 720,
         "y": 460,
         "wires": []
     },
@@ -205,7 +205,7 @@
         "qos": "2",
         "retain": "false",
         "broker": "facb7f2d.63ae2",
-        "x": 960,
+        "x": 720,
         "y": 520,
         "wires": []
     },
@@ -302,7 +302,7 @@
         "min": "-100",
         "max": "100",
         "step": "5",
-        "x": 600,
+        "x": 480,
         "y": 580,
         "wires": [
             [
@@ -319,7 +319,7 @@
         "qos": "2",
         "retain": "false",
         "broker": "facb7f2d.63ae2",
-        "x": 970,
+        "x": 730,
         "y": 580,
         "wires": []
     },
@@ -384,6 +384,11 @@
                 "type": "str"
             },
             {
+                "label": "Setup Depth",
+                "value": "setup",
+                "type": "str"
+            },
+            {
                 "label": "Home Drive",
                 "value": "home",
                 "type": "str"
@@ -397,7 +402,7 @@
         "payload": "",
         "topic": "topic",
         "topicType": "msg",
-        "x": 610,
+        "x": 430,
         "y": 240,
         "wires": [
             [
@@ -420,7 +425,7 @@
         "raw": false,
         "topic": "",
         "name": "",
-        "x": 970,
+        "x": 730,
         "y": 660,
         "wires": []
     },
@@ -454,7 +459,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 950,
+        "x": 710,
         "y": 720,
         "wires": []
     },
@@ -488,8 +493,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 970,
-        "y": 840,
+        "x": 710,
+        "y": 920,
         "wires": []
     },
     {
@@ -528,7 +533,7 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 950,
+        "x": 710,
         "y": 80,
         "wires": []
     },
@@ -556,8 +561,8 @@
         "payload": "",
         "topic": "topic",
         "topicType": "msg",
-        "x": 800,
-        "y": 780,
+        "x": 540,
+        "y": 860,
         "wires": [
             [
                 "403c99a4.d6c0b8"
@@ -573,8 +578,8 @@
         "qos": "2",
         "retain": "false",
         "broker": "facb7f2d.63ae2",
-        "x": 980,
-        "y": 780,
+        "x": 720,
+        "y": 860,
         "wires": []
     },
     {
@@ -589,7 +594,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 980,
+        "x": 740,
         "y": 320,
         "wires": []
     },
@@ -626,8 +631,8 @@
         "property": "options",
         "action": "",
         "pretty": false,
-        "x": 650,
-        "y": 780,
+        "x": 390,
+        "y": 860,
         "wires": [
             [
                 "441ff17b.39c67",
