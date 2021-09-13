@@ -20,16 +20,17 @@
 ##
 ##################################################################################################*/
 
-// Step per mm calculation aid:
+// Calculation Aid:
 #define STEP_PER_REV      3200      // How many steps per revolution of the motor (S1 on)
 #define PULLEY_TEETH      20        // How many teeth has the pulley
 #define BELT_PITCH        2         // What is the timing belt pitch in mm
+#define MAX_RPM           2900.0    // Maximum RPM of motor
 #define STEP_PER_MM       STEP_PER_REV / (PULLEY_TEETH * BELT_PITCH)
+#define MAX_SPEED         (MAX_RPM / 60.0) * PULLEY_TEETH * BELT_PITCH
 
-static motorProperties servoMotor {
-  .stepsPerRevolution = STEP_PER_REV,     
-  .maxRPM = 2900,                
-  .maxAcceleration = 100000,      
+static motorProperties servoMotor {  
+  .maxSpeed = MAX_SPEED,                
+  .maxAcceleration = 10000,      
   .stepsPerMillimeter = STEP_PER_MM,   
   .invertDirection = true,      
   .enableActiveLow = true,      
@@ -88,7 +89,7 @@ void controlSensation(String payload) {
 void receiveCommand(String payload) {
   Serial.println("Command: " + payload);
   if (payload.equals("start")) {
-    Stroker.startMotion();
+    Stroker.startPattern();
   }
   if (payload.equals("stop")) {
     Stroker.stopMotion();
@@ -100,7 +101,7 @@ void receiveCommand(String payload) {
     Stroker.moveToMax();
   }
   if (payload.equals("setup")) {
-    Stroker.setupDepth();
+    Stroker.setupDepth(10.0, true);
   }
   if (payload.equals("disable")) {
     Stroker.disable();
