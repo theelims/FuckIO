@@ -9,7 +9,8 @@
 
 // -- Initial name of the Thing. Used e.g. as SSID of the own Access Point.
 String ChipId = String((uint32_t)ESP.getEfuseMac(), HEX);
-String thingName = String(THINGNAME) + "-" + ChipId;
+// String thingName = String(THINGNAME) + "-" + ChipId;
+String thingName = String(THINGNAME);
 
 // -- Initial password to connect to the Thing, when it creates an own Access Point.
 const char wifiInitialApPassword[] = INITIAL_AP_PASSWORD;
@@ -157,6 +158,7 @@ void doHousework(void * parameter) {
             iotWebConf.delay(1000);
             ESP.restart();
         }   
+
         // Delay 100ms 
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
