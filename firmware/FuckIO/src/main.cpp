@@ -21,16 +21,16 @@
 ##################################################################################################*/
 
 // Calculation Aid:
-#define STEP_PER_REV      3200      // How many steps per revolution of the motor (S1 on)
+#define STEP_PER_REV      2000      // How many steps per revolution of the motor (S1 off, S2 on, S3 on, S4 off)
 #define PULLEY_TEETH      20        // How many teeth has the pulley
 #define BELT_PITCH        2         // What is the timing belt pitch in mm
-#define MAX_RPM           2900.0    // Maximum RPM of motor
+#define MAX_RPM           3000.0    // Maximum RPM of motor
 #define STEP_PER_MM       STEP_PER_REV / (PULLEY_TEETH * BELT_PITCH)
 #define MAX_SPEED         (MAX_RPM / 60.0) * PULLEY_TEETH * BELT_PITCH
 
 static motorProperties servoMotor {  
   .maxSpeed = MAX_SPEED,                
-  .maxAcceleration = 10000,      
+  .maxAcceleration = 100000,      
   .stepsPerMillimeter = STEP_PER_MM,   
   .invertDirection = true,      
   .enableActiveLow = true,      
@@ -44,9 +44,17 @@ static machineGeometry strokingMachine = {
   .keepoutBoundary = 5.0      
 };
 
+static endstopProperties endstop = {
+  .homeToBack = true,    
+  .activeLow = true,          
+  .endstopPin = SERVO_ENDSTOP,
+  .pinMode = INPUT
+};
+
 StrokeEngine Stroker;
 
 String getPatternJSON();
+
 
 /*#################################################################################################
 ##
@@ -107,7 +115,7 @@ void receiveCommand(String payload) {
     Stroker.disable();
   }
   if (payload.equals("home")) {
-    Stroker.enableAndHome(SERVO_ENDSTOP, true, homingNotification);
+    Stroker.enableAndHome(&endstop, homingNotification);
   }
 }
 
@@ -144,10 +152,7 @@ void receivePattern(String payload) {
 ##
 ##################################################################################################*/
 
-// ISR: Handel alarm input from servo
-void IRAM_ATTR alarmISR() {
-  Stroker.motorFault();
-}
+// None
 
 /*#################################################################################################
 ##
@@ -177,9 +182,6 @@ void setup()
   ledcAttachPin(PWM, 0);
   ledcWrite(0, 0);
 
-  // Setup interrupt
-  attachInterrupt(SERVO_ALARM, alarmISR, FALLING);
-
   // Wait for MQTT to be available
   while (!mqttConnected()) {
     delay(1000);
@@ -190,15 +192,15 @@ void setup()
 
   // Setup Stroke Engine
   Stroker.begin(&strokingMachine, &servoMotor);
-  Stroker.enableAndHome(SERVO_ENDSTOP, true, homingNotification);
+  Stroker.enableAndHome(&endstop, homingNotification);
 
   // Send available patterns as JSON
   mqttPublish("/config", getPatternJSON());
+
 }
 
 void loop() 
 {
-  // Nothing to do here, it's all FreeRTOS Tasks
   vTaskDelete(NULL);
 }
 
