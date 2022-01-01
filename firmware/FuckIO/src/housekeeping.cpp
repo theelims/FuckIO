@@ -32,7 +32,7 @@ DNSServer dnsServer;
 WebServer server(80);
 HTTPUpdateServer httpUpdater;
 WiFiClient net;
-MQTTClient mqttClient(128);
+MQTTClient mqttClient(256);
 
 char mqttServerValue[STRING_LEN];
 char mqttUserNameValue[STRING_LEN];

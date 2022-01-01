@@ -174,9 +174,6 @@ void setup()
   mqttSubscribe("/pattern", receivePattern);
   mqttSubscribe("/pwm", receivePWM);
 
-  // Set GPIOs
-  pinMode(SERVO_ALARM, INPUT);
-
   // Set PWM output with 8bit resolution and 5kHz
   ledcSetup(0, 5000, 8);
   ledcAttachPin(PWM, 0);

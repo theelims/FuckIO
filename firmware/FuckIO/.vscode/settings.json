@@ -3,5 +3,9 @@
         "map": "cpp",
         "limits": "cpp",
         "type_traits": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "MQTT",
+        "RSSI"
+    ]
 }

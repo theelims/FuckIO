@@ -17,5 +17,5 @@
                                             // but can be restored by the WiFi button
 #define SERIAL_BAUDS         115200         // Default baud rate for serial communication over USB
 #define RSSI_UPDATES         500            // Intervall in ms at which the RSSI value should be send as MQTT message
-#define STRING_LEN           64             // Bytes used to initalize char array. No path, topic, name, etc. should exceed this value
+#define STRING_LEN           64             // Bytes used to initialize char array. No path, topic, name, etc. should exceed this value
 
