@@ -3,7 +3,7 @@
  *   Use MQTT messages to control all built-in motion patterns
  *   https://github.com/theelims/FuckIO 
  *
- * Copyright (C) 2021 theelims <elims@gmx.net>
+ * Copyright (C) 2022 theelims <elims@gmx.net>
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -70,28 +70,31 @@ void homingNotification(bool isHomed) {
   }
 }
 
+void strokeEngineTelemetry(float position, float speed, bool clipping) {
+  mqttPublish("/diagnose", 
+    "{\"position\":" + String(position * 10, 1) + 
+    ",\"speed\":" + String(speed, 1) + 
+    ",\"clipping\":" + String(clipping) + "}");
+}
+
 void controlSpeed(String payload) {
   Serial.println("Speed: " + String(payload));
-  Stroker.setSpeed(payload.toFloat());
-  Stroker.applyNewSettingsNow();
+  Stroker.setSpeed(payload.toFloat(), true);
 }
 
 void controlDepth(String payload) {
   Serial.println("Depth: " + String(payload));
-  Stroker.setDepth(payload.toFloat());
-  Stroker.applyNewSettingsNow();
+  Stroker.setDepth(payload.toFloat(), true);
 }
 
 void controlStroke(String payload) {
   Serial.println("Stroke: " + String(payload));
-  Stroker.setStroke(payload.toFloat());
-  Stroker.applyNewSettingsNow();
+  Stroker.setStroke(payload.toFloat(), true);
 }
 
 void controlSensation(String payload) {
   Serial.println("Sensation: " + payload);
-  Stroker.setSensation(payload.toFloat());
-  Stroker.applyNewSettingsNow();
+  Stroker.setSensation(payload.toFloat(), true);
 }
 
 void receiveCommand(String payload) {
@@ -117,6 +120,9 @@ void receiveCommand(String payload) {
   if (payload.equals("home")) {
     Stroker.enableAndHome(&endstop, homingNotification);
   }
+  if (payload.equals("patternlist")) {
+    mqttPublish("/config", getPatternJSON());
+  }
 }
 
 void receivePWM(String payload) {
@@ -134,8 +140,7 @@ void receivePWM(String payload) {
 
 void receivePattern(String payload) {
   Serial.println("Pattern Index: " + String(payload));
-  Stroker.setPattern(payload.toInt());
-  Stroker.applyNewSettingsNow();
+  Stroker.setPattern(payload.toInt(), true);
 }
 
 /*#################################################################################################
@@ -189,6 +194,7 @@ void setup()
 
   // Setup Stroke Engine
   Stroker.begin(&strokingMachine, &servoMotor);
+  Stroker.registerTelemetryCallback(strokeEngineTelemetry);
   Stroker.enableAndHome(&endstop, homingNotification);
 
   // Send available patterns as JSON

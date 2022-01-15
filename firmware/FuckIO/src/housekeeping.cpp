@@ -62,7 +62,7 @@ char* generateMqttTopic(char *topicSuffix)
 void beginHousework()
 {
 
-    pinMode(BUTTON_PIN, INPUT_PULLUP); // Shady workaraound for IoTWebConf for ESP32 Issue 124
+    pinMode(BUTTON_PIN, INPUT_PULLUP); // Shady workaround for IoTWebConf for ESP32 Issue 124
 
 #if defined(POWER_HOLD)
     pinMode(POWER_HOLD, OUTPUT);
@@ -111,23 +111,25 @@ void beginHousework()
     mqttSubscribe("/goodbye", goodbye);
 #endif
 
-    xTaskCreate(
+    xTaskCreatePinnedToCore(
         doHousework, // Function that should be called
         "Housekeeping task",    // Name of the task (for debugging)
         4096,            // Stack size (bytes)
         NULL,            // Parameter to pass
         10,              // Run task with modest priority
-        NULL             // Task handle
+        NULL,            // Task handle
+        0                // Keep on protocol core
     );
 
       // Create task to report RSSI periodically as MQTT message
-    xTaskCreate(
+    xTaskCreatePinnedToCore(
         reportRSSI,      // Function that should be called
         "Report RSSI",   // Name of the task (for debugging)
         2048,            // Stack size (bytes)
         NULL,            // Parameter to pass
         2,               // Task priority
-        NULL             // Task handle
+        NULL,            // Task handle
+        0                // Keep on protocol core
     );
 
 }
