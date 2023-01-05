@@ -3,7 +3,7 @@
  *   Use MQTT messages to control all built-in motion patterns
  *   https://github.com/theelims/FuckIO 
  *
- * Copyright (C) 2021 theelims <elims@gmx.net>
+ * Copyright (C) 2022 theelims <elims@gmx.net>
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -13,11 +13,7 @@
 #include "esp_log.h"
 #include <config.h>
 #include <housekeeping.h>
-<<<<<<< Updated upstream
-#include <FastAccelStepper.h>
-=======
 #include "motor/genericStepper.h"
->>>>>>> Stashed changes
 #include <StrokeEngine.h>
 
 /*#################################################################################################
@@ -26,20 +22,15 @@
 ##
 ##################################################################################################*/
 
-// Step per mm calculation aid:
-#define STEP_PER_REV      3200      // How many steps per revolution of the motor (S1 on)
+// Calculation Aid:
+#define STEP_PER_REV      2000      // How many steps per revolution of the motor (S1 off, S2 on, S3 on, S4 off)
 #define PULLEY_TEETH      20        // How many teeth has the pulley
 #define BELT_PITCH        2         // What is the timing belt pitch in mm
+#define MAX_RPM           3000.0    // Maximum RPM of motor
 #define STEP_PER_MM       STEP_PER_REV / (PULLEY_TEETH * BELT_PITCH)
+#define MAX_SPEED         (MAX_RPM / 60.0) * PULLEY_TEETH * BELT_PITCH
 
-<<<<<<< Updated upstream
-static motorProperties servoMotor {
-  .stepsPerRevolution = STEP_PER_REV,     
-  .maxRPM = 2900,                
-  .maxAcceleration = 300000,      
-=======
 static motorProperties servoMotor {      
->>>>>>> Stashed changes
   .stepsPerMillimeter = STEP_PER_MM,   
   .invertDirection = true,      
   .enableActiveLow = true,      
@@ -48,19 +39,12 @@ static motorProperties servoMotor {
   .enablePin = SERVO_ENABLE              
 }; 
 
-<<<<<<< Updated upstream
-static machineGeometry strokingMachine = {
-  .physicalTravel = 160.0,       
-  .keepoutBoundary = 5.0      
-};
-
-=======
 
 GenericStepperMotor motor;
->>>>>>> Stashed changes
 StrokeEngine Stroker;
 
 String getPatternJSON();
+
 
 /*#################################################################################################
 ##
@@ -78,65 +62,32 @@ void homingNotification(bool isHomed) {
 
 void controlSpeed(String payload) {
   Serial.println("Speed: " + String(payload));
-<<<<<<< Updated upstream
-  Stroker.setSpeed(payload.toFloat());
-  Stroker.applyNewSettingsNow();
-=======
   Stroker.setParameter(StrokeParameter::RATE, payload.toFloat(), true);
->>>>>>> Stashed changes
 }
 
 void controlDepth(String payload) {
   Serial.println("Depth: " + String(payload));
-<<<<<<< Updated upstream
-  Stroker.setDepth(payload.toFloat());
-  Stroker.applyNewSettingsNow();
-=======
   Stroker.setParameter(StrokeParameter::DEPTH, payload.toFloat(), true);
->>>>>>> Stashed changes
 }
 
 void controlStroke(String payload) {
   Serial.println("Stroke: " + String(payload));
-<<<<<<< Updated upstream
-  Stroker.setStroke(payload.toFloat());
-  Stroker.applyNewSettingsNow();
-=======
   Stroker.setParameter(StrokeParameter::STROKE, payload.toFloat(), true);
->>>>>>> Stashed changes
 }
 
 void controlSensation(String payload) {
   Serial.println("Sensation: " + payload);
-<<<<<<< Updated upstream
-  Stroker.setSensation(payload.toFloat());
-  Stroker.applyNewSettingsNow();
-=======
   Stroker.setParameter(StrokeParameter::SENSATION, payload.toFloat(), true);
->>>>>>> Stashed changes
 }
 
 void receiveCommand(String payload) {
   Serial.println("Command: " + payload);
   if (payload.equals("start")) {
-    Stroker.startMotion();
+    Stroker.startPattern();
   }
   if (payload.equals("stop")) {
     Stroker.stopMotion();
   }
-<<<<<<< Updated upstream
-  if (payload.equals("retract")) {
-    Stroker.moveToMin();
-  }
-  if (payload.equals("extend")) {
-    Stroker.moveToMax();
-  }
-  if (payload.equals("disable")) {
-    Stroker.disable();
-  }
-  if (payload.equals("home")) {
-    Stroker.enableAndHome(SERVO_ENDSTOP, true, homingNotification);
-=======
   // if (payload.equals("retract")) {
   //   Stroker.moveToMin();
   // }
@@ -154,7 +105,6 @@ void receiveCommand(String payload) {
   }
   if (payload.equals("patternlist")) {
     mqttPublish("/config", getPatternJSON());
->>>>>>> Stashed changes
   }
 }
 
@@ -173,8 +123,7 @@ void receivePWM(String payload) {
 
 void receivePattern(String payload) {
   Serial.println("Pattern Index: " + String(payload));
-  Stroker.setPattern(payload.toInt());
-  Stroker.applyNewSettingsNow();
+  Stroker.setPattern(payload.toInt(), true);
 }
 
 /*#################################################################################################
@@ -191,10 +140,7 @@ void receivePattern(String payload) {
 ##
 ##################################################################################################*/
 
-// ISR: Handel alarm input from servo
-void IRAM_ATTR alarmISR() {
-  Stroker.motorFault();
-}
+// None
 
 /*#################################################################################################
 ##
@@ -216,16 +162,10 @@ void setup()
   mqttSubscribe("/pattern", receivePattern);
   mqttSubscribe("/pwm", receivePWM);
 
-  // Set GPIOs
-  pinMode(SERVO_ALARM, INPUT);
-
   // Set PWM output with 8bit resolution and 5kHz
   ledcSetup(0, 5000, 8);
   ledcAttachPin(PWM, 0);
   ledcWrite(0, 0);
-
-  // Setup interrupt
-  attachInterrupt(SERVO_ALARM, alarmISR, FALLING);
 
   // Wait for MQTT to be available
   while (!mqttConnected()) {
@@ -235,11 +175,6 @@ void setup()
   // Wait a little bit for topic subscriptions to complete
   delay(1000);
 
-<<<<<<< Updated upstream
-  // Setup Stroke Engine
-  Stroker.begin(&strokingMachine, &servoMotor);
-  Stroker.enableAndHome(SERVO_ENDSTOP, true, homingNotification);
-=======
   ESP_LOGI("main", "Configuring Motor");
   motor.begin(&servoMotor);
   motor.setMaxSpeed(MAX_SPEED); // 2 m/s
@@ -250,7 +185,6 @@ void setup()
   // Setup Stroke Stroker
   Stroker.attachMotor(&motor);
   motor.home(homingNotification);
->>>>>>> Stashed changes
 
   // Send available patterns as JSON
   mqttPublish("/config", getPatternJSON());
@@ -258,7 +192,6 @@ void setup()
 
 void loop() 
 {
-  // Nothing to do here, it's all FreeRTOS Tasks
   vTaskDelete(NULL);
 }
 
