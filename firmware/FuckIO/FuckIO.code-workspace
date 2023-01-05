@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"map": "cpp",
+			"limits": "cpp",
+			"type_traits": "cpp",
+			"cmath": "cpp"
+		},
+		"cSpell.words": [
+			"millis"
+		]
+	}
+}
