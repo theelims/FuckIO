@@ -113,7 +113,7 @@ void beginHousework()
     xTaskCreate(
         doHousework, // Function that should be called
         "Housekeeping task",    // Name of the task (for debugging)
-        2048,            // Stack size (bytes)
+        4096,            // Stack size (bytes)
         NULL,            // Parameter to pass
         10,              // Run task with modest priority
         NULL             // Task handle

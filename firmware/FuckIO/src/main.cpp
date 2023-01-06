@@ -3,18 +3,25 @@
  *   Use MQTT messages to control all built-in motion patterns
  *   https://github.com/theelims/FuckIO 
  *
- * Copyright (C) 2022 theelims <elims@gmx.net>
+ * Copyright (C) 2023 theelims <elims@gmx.net>
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
 
+#define VIRTUAL
+
 #include <Arduino.h>
 #include "esp_log.h"
 #include <config.h>
 #include <housekeeping.h>
-#include "motor/genericStepper.h"
 #include <StrokeEngine.h>
+#ifdef VIRTUAL
+  #include <motor/virtualMotor.h>
+#elif 
+  #include <motor/genericStepper.h>
+#endif
+
 
 /*#################################################################################################
 ##
@@ -30,17 +37,24 @@
 #define STEP_PER_MM       STEP_PER_REV / (PULLEY_TEETH * BELT_PITCH)
 #define MAX_SPEED         (MAX_RPM / 60.0) * PULLEY_TEETH * BELT_PITCH
 
-static motorProperties servoMotor {      
-  .stepsPerMillimeter = STEP_PER_MM,   
-  .invertDirection = true,      
-  .enableActiveLow = true,      
-  .stepPin = SERVO_PULSE,              
-  .directionPin = SERVO_DIR,          
-  .enablePin = SERVO_ENABLE              
-}; 
+#ifndef VIRTUAL
+  static motorProperties servoMotor {      
+    .stepsPerMillimeter = STEP_PER_MM,   
+    .invertDirection = true,      
+    .enableActiveLow = true,      
+    .stepPin = SERVO_PULSE,              
+    .directionPin = SERVO_DIR,          
+    .enablePin = SERVO_ENABLE              
+  }; 
+#endif
 
+#ifdef VIRTUAL
+  VirtualMotor motor;
+#elif 
+  GenericStepperMotor motor;
+#endif
 
-GenericStepperMotor motor;
+//
 StrokeEngine Stroker;
 
 String getPatternJSON();
@@ -51,6 +65,14 @@ String getPatternJSON();
 ##    C A L L B A C K S
 ##
 ##################################################################################################*/
+
+void printSpeedPositionOnSerial(float time, float position, float speed) {
+  Serial.print(time, 2);
+  Serial.print("\t");
+  Serial.print(position, 2);
+  Serial.print("\t");
+  Serial.println(speed, 2);
+}
 
 void homingNotification(bool isHomed) {
   if (isHomed) {
@@ -88,20 +110,9 @@ void receiveCommand(String payload) {
   if (payload.equals("stop")) {
     Stroker.stopMotion();
   }
-  // if (payload.equals("retract")) {
-  //   Stroker.moveToMin();
-  // }
-  // if (payload.equals("extend")) {
-  //   Stroker.moveToMax();
-  // }
-  // if (payload.equals("setup")) {
-  //   Stroker.setupDepth(10.0, true);
-  // }
-  // if (payload.equals("disable")) {
-  //   Stroker.disable();
-  // }
   if (payload.equals("home")) {
-    motor.home(homingNotification);
+    //motor.home(homingNotification);
+    motor.home();
   }
   if (payload.equals("patternlist")) {
     mqttPublish("/config", getPatternJSON());
@@ -151,9 +162,11 @@ void receivePattern(String payload) {
 void setup() 
 {
   // Handle WiFi, Provisioning by IoTWebConf, MQTT connection & power in the background
+  ESP_LOGI("FuckIO", "Start WiFi provisioning");
   beginHousework();
 
   // Register callbacks for all MQTT subscriptions
+  ESP_LOGI("FuckIO", "Register MQTT subscriptions");
   mqttSubscribe("/speed", controlSpeed);
   mqttSubscribe("/depth", controlDepth);
   mqttSubscribe("/stroke", controlStroke);
@@ -163,6 +176,7 @@ void setup()
   mqttSubscribe("/pwm", receivePWM);
 
   // Set PWM output with 8bit resolution and 5kHz
+  ESP_LOGI("FuckIO", "Setup PWM output");
   ledcSetup(0, 5000, 8);
   ledcAttachPin(PWM, 0);
   ledcWrite(0, 0);
@@ -171,20 +185,30 @@ void setup()
   while (!mqttConnected()) {
     delay(1000);
   }
+  ESP_LOGI("FuckIO", "Connected to MQTT server");
 
   // Wait a little bit for topic subscriptions to complete
   delay(1000);
 
-  ESP_LOGI("main", "Configuring Motor");
+  ESP_LOGI("FuckIO", "Configuring Motor");
+  
+#ifdef VIRTUAL
+  motor.begin(printSpeedPositionOnSerial, 50);
+#elif 
   motor.begin(&servoMotor);
+  //motor.attachPositionFeedback(printSpeedPositionOnSerial, 50);
+  motor.setSensoredHoming(SERVO_ENDSTOP, INPUT_PULLUP, true);
+#endif
   motor.setMaxSpeed(MAX_SPEED); // 2 m/s
   motor.setMaxAcceleration(100000); // 100 m/s^2
   motor.setMachineGeometry(160.0, 5.0);
-  motor.setSensoredHoming(SERVO_ENDSTOP, INPUT_PULLUP, false);
-
+  
   // Setup Stroke Stroker
+  ESP_LOGI("FuckIO", "Attach motor to StrokeEngine");
   Stroker.attachMotor(&motor);
-  motor.home(homingNotification);
+  motor.enable();
+  motor.home();
+  //motor.home(homingNotification);
 
   // Send available patterns as JSON
   mqttPublish("/config", getPatternJSON());
