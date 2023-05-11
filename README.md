@@ -24,14 +24,15 @@ The motor mount is designed for a NEMA23 servo or stepper motor. Any motor fitti
 * GT2 20 Tooth Pulley for 8mm Axis and a 10mm belt
 * GT2 belt with 10mm width
 * Various M3 and M5 screws and nuts
-* ESP32 DevKitC V4 board
-* custom FuckIO PCB plus parts
+* OSSM Ref Board from Research and Desire: https://shop.researchanddesire.com/collections/all/products/ossm-reference-board
+* M5 Stack Remote Control from Ortlof: https://github.com/ortlof/OSSM-M5-Remote
 
 ## Control
-### Electronics
-A small PCB provides some interface electronics like level shifting and a 5V supply for the ESP32 DevKitC V4 board. It's all through hole and easy to hand solder. There is only one button to force the ESP32 in AP mode should on forget the password.
-
 ### Firmware
+The currently best firmware is the official OSSM firmware, or Ortlof's firmware for the M5 Remote https://github.com/ortlof/OSSM-M5-Remote
+
+The firmware in the repository can only be used in conjunction with node-red.
+
 The firmware uses the following projects:
 * IotWebConf for WiFi provisioning: https://github.com/prampec/IotWebConf. Check the [end-user manual](https://github.com/prampec/IotWebConf/blob/master/doc/UsersManual.md) on how to use it.
 * MQTT for communication: https://github.com/256dpi/arduino-mqtt Albeit SSL is not supported.
@@ -40,9 +41,4 @@ The firmware uses the following projects:
 
 ### node-red
 I've setup a node-red instance on my NAS to control FuckIO through MQTT messages. Have a look at the provided [flows.json](node-red/flows.json) to draw some inspiration from.
-
-## ToDo's & Known Issues
-There are still a few open items and kinks to iron out:
-* The iHSV57 can draw more power then the Meanwell power brick can supply. In high load conditions the power brick goes into failure mode. It needs a couple of minutes to recover. I need to look into tuning the servo.
-* Very hard decerelations may trip the over-voltage protection of the power brick. The motor's induction can raise the voltage quite drastically. The power brick will recover after a couple of minutes. Will be adressed in a next PCB revision with a protection circuit. For now you may tone down a little bit on the maximum acceleration. 
 
